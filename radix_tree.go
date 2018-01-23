@@ -90,6 +90,10 @@ func (n *node) setMethods(methods ...HTTPMethod) {
 	}
 }
 
+func (n *node) hasMethod(method HTTPMethod) bool {
+	return method == (method & n.methods)
+}
+
 // addRoute adds a node with given path, handle all the resource with it.
 // if it's a leaf, it should have a ring of `Status`.
 func (n *node) addRoute(path string, methods ...HTTPMethod) {
@@ -206,14 +210,14 @@ func (n *node) insertChild(path string, fullPath string, methods ...HTTPMethod) 
 		}
 	}
 
+	var i = 0
+	var c byte
 	for ; numParams > 0; numParams-- {
 		// first step, find the first wildcard(beginning with ':' or '*') of the current path
-		var i int
-		var c byte
 		for i = 0; i < len(path); i++ {
 			c = path[i]
-			if c != ':' && c != '*' {
-				continue
+			if c == ':' || c == '*' {
+				break
 			}
 		}
 

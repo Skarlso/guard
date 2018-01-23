@@ -18,5 +18,6 @@ workflow:
 */
 
 func main() {
-
+	n := node{}
+	n.insertChild("/:name", "/user/:name", GET)
 }
